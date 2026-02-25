@@ -39,6 +39,11 @@ on:
         description: "Whether to run the private build stage"
         required: true
         type: boolean
+      private-runner-distro:
+        description: "Runner distro label to use"
+        required: false
+        default: "fedora"
+        type: string
       private-build-action:
         description: "What actions to run for the private build stage"
         required: false
@@ -258,7 +263,7 @@ jobs:
 
   Private-Build-Stage:
     if: ${{ inputs.run-private-build || github.event.pull_request.draft == false }}
-    runs-on: [self-hosted, trusted]
+    runs-on: ${{ fromJSON(format('[\"self-hosted\", \"trusted\", \"{0}\"]', inputs.private-runner-distro)) }}
     needs: [Verifying]
     steps:
       - name: Private Stage
