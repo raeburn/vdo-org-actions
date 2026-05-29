@@ -147,7 +147,7 @@ jobs:
           type: remove
 
   Public-Build-Stage:
-    if: ${{ inputs.run-public-build || github.event.pull_request.draft == false }}
+    if: ${{ inputs.run-public-build && github.event.pull_request.draft == false }}
     runs-on: [self-hosted, untrusted]
     needs: [Verifying]
     steps:
@@ -204,7 +204,7 @@ jobs:
           type: add
 
   Public-Test-Stage:
-    if: ${{ inputs.run-public-tests || github.event.pull_request.draft == false }}
+    if: ${{ inputs.run-public-tests && github.event.pull_request.draft == false }}
     runs-on: [self-hosted, untrusted]
     needs: [Verifying, Public-Build-Stage]
     steps:
@@ -262,7 +262,7 @@ jobs:
           retention-days: 5
 
   Private-Build-Stage:
-    if: ${{ inputs.run-private-build || github.event.pull_request.draft == false }}
+    if: ${{ inputs.run-private-build && github.event.pull_request.draft == false }}
     runs-on: ${{ fromJSON(format('["self-hosted", "trusted", "{0}"]', inputs.private-runner-distro)) }}
     needs: [Verifying]
     steps:
@@ -319,7 +319,7 @@ jobs:
           type: add
 
   Private-Test-Stage:
-    if: ${{ inputs.run-private-tests || github.event.pull_request.draft == false }}
+    if: ${{ inputs.run-private-tests && github.event.pull_request.draft == false }}
     runs-on: ${{ fromJSON(format('["self-hosted", "trusted", "{0}"]', inputs.private-runner-distro)) }}
     needs: [Verifying, Private-Build-Stage]
     steps:
